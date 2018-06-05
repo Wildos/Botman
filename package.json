@@ -1,0 +1,24 @@
+{
+  "name": "Wildos-Bot",
+  "version": "0.0.1",
+  "description": "Discord bot",
+  "engines": {
+    "node": "8.9.1"
+  },
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "bufferutil": "^3.0.5",
+    "discord.js": "^11.3.2",
+    "erlpack": "^0.1.2"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "node",
+    "heroku",
+    "discord"
+  ],
+  "license": "MIT"
+}

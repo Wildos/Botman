@@ -1,0 +1,5 @@
+{
+  "name": "Wildos-Bot",
+  "description": "A discord bot",
+  "keywords": ["node", "discord", "heroku"],
+}
