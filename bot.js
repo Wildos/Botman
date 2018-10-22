@@ -80,9 +80,10 @@ client.on('ready', () => {
 	});
 
 client.on('message', msg => {
+	if (process.env.AUTHORIZED_CHANNELS.includes(msg.channel.name) || msg.channel.type === "dm")
+	{
 		if (msg.content.substring(0, 1) == '!') {
-			if (process.env.AUTHORIZED_CHANNELS.includes(msg.channel.name) || msg.channel.type === "dm")
-			{
+			
 				var args = msg.content.substring(1).split(' ');
 				var cmd = args[0];
 				var response = "";
@@ -101,13 +102,18 @@ client.on('message', msg => {
 					break;
 				case 'gmRoll':
 				case 'gmroll':
-					msg.reply('your roll have been sent to the GM.');
-					var gm = client.users.find(user => user.tag === process.env.ACTUAL_GM);
-					response = 'The player ' + msg.author + ' rolled ' + get_roll_message(args[0]);
+					var gm = client.users.find("id", process.env.ACTUAL_GM);
+					if (gm == null)
+						{
+							msg.reply('an error ocurred while sending a message to the GM: ' +  gm.username + ".");
+							break;
+						}
+						response = 'The player ' + msg.author + ' rolled ' + get_roll_message(args[0]);
 					if (response.length > 2000)
 						gm.send("Error: response's length from " + msg.author + " exceed limit of discord API.");
 					else
 						gm.send(response);
+					msg.reply('your roll have been sent to the GM: ' +  gm.username + ".");		
 					break;
 				}
 			}
