@@ -1,7 +1,7 @@
 {
   "name": "Wildos-Bot",
-  "version": "0.0.1",
-  "description": "Discord bot",
+  "version": "1.0.0",
+  "description": "Discord bot for rolls",
   "engines": {
     "node": "8.9.1"
   },
@@ -11,13 +11,18 @@
   },
   "dependencies": {
     "bufferutil": "^3.0.5",
-    "discord.js": "^11.3.2",
+    "discord.js": "^11.4.2",
+    "enum": "^2.5.0",
     "erlpack": "^0.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-google": "^0.11.0",
+    "xo": "^0.23.0"
+  },
   "keywords": [
     "node",
-    "heroku",
+	"bot",
     "discord"
   ],
   "license": "MIT"
