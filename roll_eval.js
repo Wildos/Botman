@@ -1,5 +1,83 @@
 const BtmErr = require('./btm_error_handler');
 
+const validWord = {
+  'NONE': -1,
+  'easy': 75,
+  'facile': 75,
+  'basic': 100,
+  'basique': 100,
+  'medium': 130,
+  'moyen': 130,
+  'hard': 170,
+  'difficile': 170,
+  'risky': 200,
+  'risque': 200,
+  'risqué': 200,
+  'danger': 300,
+};
+
+/**
+ *
+ *
+ * @returns
+ */
+module.exports.getValidWordString = function() {
+  let str;
+
+  str = '##Valid words\n';
+  for (const key in validWord) {
+    if (validWord.hasOwnProperty(key) && key != 'NONE') {
+      str += key + ' : ' + validWord[key] + '\n';
+    }
+  }
+  return str;
+};
+
+/**
+ *
+ *
+ * @param {*} arg
+ * @returns
+ */
+function isValidWord(arg) {
+  if (validWord[arg] != undefined) {
+    return (1);
+  }
+  return (0);
+}
+
+/**
+ *
+ *
+ * @param {*} arg
+ * @param {*} values
+ * @param {*} msg
+ */
+function populateByWord(arg, values, msg) {
+  values.numberOfRoll = 1;
+  values.diceRange = validWord[arg];
+}
+
+/**
+ *
+ *
+ * @param {*} str
+ * @returns
+ */
+function notEmpty(str) {
+  return str != '';
+}
+
+/**
+ *
+ *
+ * @param {*} str
+ * @returns
+ */
+function isNumeric(str) {
+  return str.match(/^[0-9]+$/i) !== null;
+}
+
 /**
  * Fill the proper value in the modifier value.
  *
@@ -10,18 +88,17 @@ const BtmErr = require('./btm_error_handler');
  */
 function populateModifierValue(arg, values, msg) {
   // Get modifier : +/-<NOMBRE>
-  let argSplt = arg.split(/[+]/);
-  // TODO: check les multiples operateurs a la suite
+  let argSplt = arg.split(/[+]/).filter(notEmpty);
   if (argSplt.length == 2
-      && Number.isInteger(parseInt(argSplt[1], 10))) {
+      && isNumeric(argSplt[1])) {
     values.modifier = parseInt(argSplt[1], 10);
   } else if (argSplt.length >= 2) {
     BtmErr.replyError('INVALID_ARGUMENT', msg, arg);
     values.response = '';
     return [];
   } else {
-    argSplt = arg.split(/[-]/);
-    if (argSplt.length == 2 && Number.isInteger(parseInt(argSplt[1], 10))) {
+    argSplt = arg.split(/[-]/).filter(notEmpty);
+    if (argSplt.length == 2 && isNumeric(argSplt[1])) {
       values.modifier = 0 - parseInt(argSplt[1], 10);
     } else if (argSplt.length >= 2) {
       BtmErr.replyError('INVALID_ARGUMENT', msg, arg);
@@ -106,11 +183,15 @@ function populateDiceValues(arg, values, msg) {
     values.numberOfRoll = 1;
     values.diceRange = 100;
   } else {
-    let argSplit = populateModifierValue(arg, values, msg);
-    if (argSplit.length > 0) {
-      argSplit = populateDiceNumber(argSplit, values, msg);
+    if (isValidWord(arg)) {
+      populateByWord(arg, values, msg);
+    } else {
+      let argSplit = populateModifierValue(arg, values, msg);
       if (argSplit.length > 0) {
-        populateDiceRange(argSplit, values, msg);
+        argSplit = populateDiceNumber(argSplit, values, msg);
+        if (argSplit.length > 0) {
+          populateDiceRange(argSplit, values, msg);
+        }
       }
     }
   }
@@ -140,6 +221,7 @@ function createResponse(values) {
     result += tmp;
     values.response += tmp;
   }
+  values.response += ' *[/ ' + values.diceRange + ']*';
   if (values.modifier != 0) {
     result += values.modifier;
     values.response += (values.modifier > 0) ? ' + ' : ' - ';
@@ -161,7 +243,6 @@ function createResponse(values) {
 module.exports.getRoll = function(arg, msg) {
   // let response = 'ready';
   const values = {
-    arg: arg,
     response: 'ready',
     modifier: 0,
     numberOfRoll: 0,

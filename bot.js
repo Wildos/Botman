@@ -50,6 +50,7 @@ client.on('message', (msg) => {
           + ' and send it to the actual GM.\n'
           + '**!gmRoll [roll_format]**: same as gmroll\n\n'
           + '##Roll_format\n'
+          + '- **[valid_word]**\n'
           + '- <range_number *default: 100*>\n'
           + ' - <dices_number *default: 1*>**d[range_number]**\n'
           + '- **[range_number](+ -)[modifier_number]**\n'
@@ -57,7 +58,9 @@ client.on('message', (msg) => {
           + '[modifier_number]**\n'
           + '- \<value optionnal\>, **[required value]**, **(one of'
           + ' the values)**\n\n'
-          + 'Source code: [https://github.com/Wildos/Botman]')
+          + RollEval.getValidWordString()
+          + '\nSource code: [https://github.com/Wildos/Botman]\n'
+          )
               .then((sent) => console.log('Sent help to ' +
                 msg.author.username))
               .catch(console.error);
