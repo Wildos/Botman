@@ -34,15 +34,24 @@ Enum.register();
 
 	module.exports.replyError = function(errEnum, target, strSup) {
 		const errNum = validError.get(errEnum).value;
-		if (errNum > 0) {
-			target.reply(errorMsg[errNum - 1] + strSup)
-				.then(() => console.log('Sent a reply to ' +
-        target.author.username + ': '
+		if (target == undefined || target == null)
+		{
+			console.log('replyError: Target received is undefined or null: ' + errEnum)
+				.catch(console.error);
+		}
+		else
+		{
+			if (errNum > 0) {
+				target.reply(errorMsg[errNum - 1] + strSup)
+					.then(() => console.log('Sent a reply to ' +
+					target.author.username + ': '
             + errorMsg[errNum - 1] + strSup))
-				.catch(console.error);
-		} else {
-			console.log('ErrEnum received is unknown: ' + errEnum)
-				.catch(console.error);
+					.catch(console.error);
+			} else {
+				console.log('ErrEnum received is unknown: ' + errEnum)
+					.catch(console.error);
+			}
+
 		}
 	};
 }());

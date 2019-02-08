@@ -17,9 +17,9 @@ const validWord = {
 };
 
 /**
+ *	Return the string of all valid word values
  *
- *
- * @returns
+ * @returns {String}
  */
 module.exports.getValidWordString = function() {
 	let str;
@@ -34,24 +34,25 @@ module.exports.getValidWordString = function() {
 };
 
 /**
+ * Return TRUE if arg is a valid word
  *
- *
- * @param {*} arg
- * @returns
+ * @param {*} arg a string representing a valid word
+ * @returns {Boolean}
  */
 function isValidWord(arg) {
 	if (validWord[arg] != undefined) {
-		return (1);
+		return (true);
 	}
-	return (0);
+	return (false);
+
 }
 
 /**
+ *	Fill values according to the word arg
  *
- *
- * @param {*} arg
- * @param {*} values
- * @param {*} msg
+ * @param {*} arg a string representing a valid word
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
  */
 function populateByWord(arg, values) {
 	values.numberOfRoll = 1;
@@ -59,20 +60,20 @@ function populateByWord(arg, values) {
 }
 
 /**
+ *	Return FALSE if str is empty
  *
- *
- * @param {*} str
- * @returns
+ * @param {*} str the string to check
+ * @returns {Boolean}
  */
 function notEmpty(str) {
 	return str != '';
 }
 
 /**
+ *	Return TRUE if str contain only numeric characters
  *
- *
- * @param {*} str
- * @returns
+ * @param {*} str the string to check
+ * @returns {Boolean}
  */
 function isNumeric(str) {
 	return str.match(/^[0-9]+$/i) !== null;
@@ -80,11 +81,13 @@ function isNumeric(str) {
 
 /**
  * Fill the proper value in the modifier value.
+ * and return the unused part of the string
  *
- * @param {String} arg
- * @param {*} values
- * @param {Message} msg
- * @returns
+ * @param {String} arg the string to be parsed
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
+ * @param {Message} msg the message to send error to
+ * @returns {String}
  */
 function populateModifierValue(arg, values, msg) {
 	// Get modifier : +/-<NOMBRE>
@@ -111,15 +114,17 @@ function populateModifierValue(arg, values, msg) {
 
 /**
  * Fill the dice_number value.
+ * and return the unused part of the string
  *
- * @param {String[]} arg
- * @param {*} values
- * @param {Message} msg
- * @returns
+ * @param {String} arg the string to be parsed
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
+ * @param {Message} msg the message to send error to
+ * @returns {String[]}
  */
-function populateDiceNumber(argSplt, values, msg) {
+function populateDiceNumber(arg, values, msg) {
 	// Identify the number of roll
-	const argSplt2 = argSplt[0].split(/[Dd]/);
+	const argSplt2 = arg.split(/[Dd]/);
 	if (argSplt2.length > 2) {
 		BtmErr.replyError('INVALID_ARGUMENT', msg, values.arg);
 		values.response = '';
@@ -129,7 +134,7 @@ function populateDiceNumber(argSplt, values, msg) {
       && parseInt(argSplt2[0], 10) > 0) {
 		values.numberOfRoll = parseInt(argSplt2[0], 10);
 	} else if (argSplt2.length == 1
-      || argSplt2.length ==2 && argSplt2[0] === '') {
+      || argSplt2.length == 2 && argSplt2[0] === '') {
 		values.numberOfRoll = 1;
 	} else {
 		BtmErr.replyError('NAN_DICE_NBR', msg, argSplt2[0]);
@@ -140,13 +145,13 @@ function populateDiceNumber(argSplt, values, msg) {
 }
 
 /**
+ *	Fill the dice range value
  *
- *
- * @param {String[]} arg
- * @param {*} values
- * @param {Message} msg
- * @returns
- */
+ * @param {String[]} arg the tab of string to be parsed
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
+ * @param {Message} msg the message to send error to
+ */ 
 function populateDiceRange(argSplt, values, msg) {
 // Identify the dice range
 	if (argSplt.length > 2) {
@@ -174,9 +179,10 @@ function populateDiceRange(argSplt, values, msg) {
 /**
  * Fill all the required values.
  *
- * @param {String} arg
- * @param {*} values
- * @param {Message} msg
+ * @param {String} arg the string to be parsed
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
+ * @param {Message} msg the message to send error to
  */
 function populateDiceValues(arg, values, msg) {
 	if (arg == undefined) {
@@ -188,7 +194,7 @@ function populateDiceValues(arg, values, msg) {
 		} else {
 			let argSplit = populateModifierValue(arg, values, msg);
 			if (argSplit.length > 0) {
-				argSplit = populateDiceNumber(argSplit, values, msg);
+				argSplit = populateDiceNumber(argSplit[0], values, msg);
 				if (argSplit.length > 0) {
 					populateDiceRange(argSplit, values, msg);
 				}
@@ -198,9 +204,10 @@ function populateDiceValues(arg, values, msg) {
 }
 
 /**
+ * Create the string with the values of the roll
  *
- *
- * @param {*} values
+ * @param {*} values the structure containing all the values :
+ * (response, numberOfRoll, diceRange, modifier)
  */
 function createResponse(values) {
 	let result = 0;
@@ -235,13 +242,12 @@ function createResponse(values) {
 /**
    * Create the string response of an roll argument.
    *
-   * @param {String} arg
-   * @param {Message} msg
-   * @returns
+   * @param {String} arg an argument to be parsed
+   * @param {Message} msg a message to reply in case of error
+   * @returns {String}
    */
 
 module.exports.getRoll = function(arg, msg) {
-	// let response = 'ready';
 	const values = {
 		response: 'ready',
 		modifier: 0,
