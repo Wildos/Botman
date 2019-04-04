@@ -4,10 +4,10 @@ const validWord = {
 	'NONE': -1,
 	'easy': 75,
 	'facile': 75,
-	'basic': 100,
-	'basique': 100,
-	'medium': 130,
-	'moyen': 130,
+	'basic': 20,
+	'basique': 20,
+	'medium': 100,
+	'moyen': 100,
 	'hard': 170,
 	'difficile': 170,
 	'risky': 200,
@@ -216,15 +216,15 @@ function createResponse(values) {
 	if (values.numberOfRoll > 1) {
 		values.response = '(';
 		for (var i=0; i < values.numberOfRoll - 1; i++) {
-			tmp = Math.floor(Math.random() * Math.floor(values.diceRange + 1));
+			tmp = Math.floor(Math.random() * Math.floor(values.diceRange)) + 1;
 			result += tmp;
 			values.response += tmp + ' + ';
 		}
-		tmp = Math.floor(Math.random() * Math.floor(values.diceRange + 1));
+		tmp = Math.floor(Math.random() * Math.floor(values.diceRange)) + 1;
 		result += tmp;
 		values.response += tmp + ')';
 	} else {
-		tmp = Math.floor(Math.random() * Math.floor(values.diceRange + 1));
+		tmp = Math.floor(Math.random() * Math.floor(values.diceRange)) + 1;
 		result += tmp;
 		values.response += tmp;
 	}
