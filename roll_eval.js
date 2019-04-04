@@ -187,7 +187,7 @@ function populateDiceRange(argSplt, values, msg) {
 function populateDiceValues(arg, values, msg) {
 	if (arg == undefined) {
 		values.numberOfRoll = 1;
-		values.diceRange = 100;
+		values.diceRange = 20;
 	} else {
 		if (isValidWord(arg)) {
 			populateByWord(arg, values);
