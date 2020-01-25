@@ -11,11 +11,11 @@ function get_dice_result(string) {
 			let number_of_roll = Number(parts[0]);
 			let number_of_range = Number(parts[1]);
 
-			let nbr = Math.floor(Math.random() * Math.floor(number_of_range - 1)) + 1;
+			let nbr = Math.floor(Math.random() * Math.floor(number_of_range)) + 1;
 			result_text += String(nbr);
 			result_nb += nbr;
 			for (let i = 1; i < number_of_roll; i += 1) {
-				nbr = Math.floor(Math.random() * Math.floor(number_of_range - 1)) + 1;
+				nbr = Math.floor(Math.random() * Math.floor(number_of_range)) + 1;
 				result_text += ' + ' + String(nbr);
 				result_nb += nbr;
 			}
