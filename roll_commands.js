@@ -32,9 +32,17 @@ function get_dice_result(string) {
 function split_dice_roll(string, mod) {
 	let results = [];
 	let parts = string.split(mod);
-	parts.forEach(element => {
-		results.push(get_result(element));
-	});
+
+	let element = parts[0];
+	let result = get_result(element);
+	results.push(result);
+	for (var i = 1, len = parts.length; i < len; i++) {
+		let element = parts[i];
+		let result = get_result(element);
+		if (mod === '-')
+			result[0] = -result[0];
+		results.push(result);
+	}
 	return results;
 }
 
@@ -44,12 +52,12 @@ function fusion_results(results, mod) {
 
 	if (results.length > 1) {
 		let result = results[0];
-		result_nb += (mod === '+') ? Number(result[0]) : -Number(result[0]);
+		result_nb += Number(result[0]);
 		result_text += String(result[1]);
 
 		for (var i = 1, len = results.length; i < len; i++) {
 			let result = results[i];
-			result_nb += (mod === '+') ? Number(result[0]) : -Number(result[0]);
+			result_nb += Number(result[0]);
 			result_text += ' ' + mod + ' ' + String(result[1]);
 		}
 	}
@@ -79,7 +87,7 @@ function get_result(args) {
 		} else if (string.includes('-')) {
 			mod = '-';
 			results = split_dice_roll(string, mod);
-		}else {
+		} else  {
 			return get_dice_result(string);
 		}
 	}
