@@ -2,8 +2,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const BtmCmds = require('./bot_commands.js');
 
-const regex_rolled_nat_20 = new RegExp('<@(.*)>, .*\\(.*20.*\\) \\[\\/20\\].* = [0-9]+');
-const regex_rolled_nat_1 = new RegExp('<@(.*)>, .*\\((?:[0-9]+ \\+ )*1(?: \\+ [0-9]+)*\\) \\[\\/20\\].* = [0-9]+');
+const regex_rolled_nat_20 = new RegExp('<@.*?([0-9]*)>, .*\\(.*20.*\\) \\[\\/20\\].* = [0-9]+');
+const regex_rolled_nat_1 = new RegExp('<@.*?([0-9]*)>, .*\\((?:[0-9]+ \\+ )*1(?: \\+ [0-9]+)*\\) \\[\\/20\\].* = [0-9]+');
 
 const dnd_class = ['barbarian', 'bard', 'cleric', 'druid', 'dungeon_master', 'fighter', 'monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
 
