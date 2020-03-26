@@ -4,7 +4,7 @@ function get_dice_result(string) {
 
 	if (String(string).includes('d')) {
 		let parts = string.split('d');
-		if (parts.length != 2){
+		if (parts.length !== 2){
 			return [0, 'Wtf is this?'];
 		}
 		else {
@@ -98,9 +98,15 @@ function get_result(args) {
 
 // TODO make check of parameters
 module.exports.roll_command = function(origin, args) {
-	if (args.length == 0) {
+	if (args.length === 0) {
 		args = ['1d20'];
 	}
+	args.forEach(function(part, index, theArray) {
+		if (!part.includes("d")) {
+			theArray[index] = "1d" + part;
+		}
+	});
+
 	let result = get_result(args);
 	let message = result[1] + ' = ' + result[0];
 	console.log('replied '+ origin.author.username +' : ' + message);
@@ -108,9 +114,15 @@ module.exports.roll_command = function(origin, args) {
 };
 
 module.exports.gmroll_command = function(origin, args) {
-	if (args.length == 0) {
+	if (args.length === 0) {
 		args = ['1d20'];
 	}
+	args.forEach(function(part, index, theArray) {
+		if (!part.includes("d")) {
+			theArray[index] = "1d" + part;
+		}
+	});
+
 	let result = get_result(args);
 	let message = result[1] + ' = ' + result[0];
 	console.log('replied '+ origin.author.username +' : ' + message);
